@@ -1,0 +1,16 @@
+Basic Puppet module for OpenSSH server.
+
+Sample usage:
+
+    node host1.fqdn {
+        $ssh_port = 2222
+        $ssh_pubkeyauthentication = yes
+        $ssh_permitemptypasswords = no
+        include openssh::server
+    }
+
+Additional parameters can be found in templates/sshd_config.erb.
+I've intentionally not used parameterized classes but I might change my mind about this later on.
+
+It's been tested, but do let me know if anything breaks.
+
