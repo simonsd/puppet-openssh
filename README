@@ -9,8 +9,14 @@ Sample usage:
         include openssh::server
     }
 
+For Port, ListenAddress, HostKey and Subsystem it's possible to use multiple lines.
+This can be configured as follows:
+
+$ssh_port = [ "22", "2222" ]
+
 Additional parameters can be found in templates/sshd_config.erb.
 I've intentionally not used parameterized classes but I might change my mind about this later on.
 
 It's been tested, but do let me know if anything breaks.
+
 
