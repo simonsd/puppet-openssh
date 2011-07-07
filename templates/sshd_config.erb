@@ -1,14 +1,22 @@
 # File managed by Puppet
 
 # What ports, IPs and protocols we listen for
-<% if has_variable?("ssh_port") -%>Port <%= ssh_port %><% else %>Port 22<% end %>
+<% if has_variable?("ssh_port") %><% ssh_port.each do |line| -%>
+Port <%= line %>
+<% end -%><% else %>Port 22<% end -%>
 # Use these options to restrict which interfaces/protocols sshd will bind to
 #ListenAddress ::
-<% if has_variable?("ssh_listenaddress") -%>ListenAddress <%= ssh_listenaddress %><% else %>ListenAddress 0.0.0.0<% end %>
+<% if has_variable?("ssh_listenaddress") %><% ssh_listenaddress.each do |line| -%>
+ListenAddress <%= line %>
+<% end -%><% else %>ListenAddress 0.0.0.0<% end -%>
 <% if has_variable?("ssh_protocol") -%>Protocol <%= ssh_protocol %><% else %>Protocol 2<% end %>
 # HostKeys for protocol version 2
-HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
+<% if has_variable?("ssh_hostkey") %><% ssh_hostkey.each do |line| -%>
+HostKey <%= line %>
+<% end -%>
+<% else %>HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key<% end -%>
+
 #Privilege Separation is turned on for security
 <% if has_variable?("ssh_useprivilegeseparation") -%>UsePrivilegeSeparation <%= ssh_useprivilegeseparation %><% else %>UsePrivilegeSeparation yes<% end %>
 
@@ -71,7 +79,11 @@ HostKey /etc/ssh/ssh_host_dsa_key
 # Allow client to pass locale environment variables
 <% if has_variable?("ssh_acceptenv") -%>AcceptEnv <%= ssh_acceptenv %><% else %>AcceptEnv LANG LC_*<% end %>
 
-Subsystem sftp /usr/lib/openssh/sftp-server
+<% if has_variable?("ssh_subsystem") %><% ssh_subsystem.each do |line| -%>
+Subsystem <%= line %>
+<% end -%>
+<% else %>Subsystem sftp /usr/lib/openssh/sftp-server
+<% end -%>
 
 # Set this to 'yes' to enable PAM authentication, account processing,
 # and session processing. If this is enabled, PAM authentication will
