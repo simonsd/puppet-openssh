@@ -25,10 +25,21 @@ class openssh::server {
             "openssh-server":
                 ensure => present;
             "openssh-client":
-                ensure => present;
+                ensure => present,
+				name => $operatingsystem ? {
+					'Centos' => 'openssh-clients',
+					'Debian' => 'openssh-client',
+				};
+		}
+
+		@package {
             "openssh-blacklist":
-                ensure => present;
+                ensure => present,
         }
+
+		if $operatingsystem == 'Debian' {
+			realize(Package['openssh-blacklist'])
+		}
     }
 
     class config {
@@ -62,6 +73,10 @@ class openssh::server {
             ensure     => running,
             hasrestart => true,
             hasstatus  => true,
+			name       => $operatingsystem ? {
+							'Debian' => 'ssh',
+							'Centos' => 'sshd',
+			},
             require    => Class["config"],
         }
     }
