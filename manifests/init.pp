@@ -22,9 +22,9 @@
 class openssh::server {
     class install {
         package {
-            "openssh-server":
+            'openssh-server':
                 ensure => present;
-            "openssh-client":
+            'openssh-client':
                 ensure => present,
 				name => $operatingsystem ? {
 					'Centos' => 'openssh-clients',
@@ -33,7 +33,7 @@ class openssh::server {
 		}
 
 		@package {
-            "openssh-blacklist":
+            'openssh-blacklist':
                 ensure => present,
         }
 
@@ -44,31 +44,31 @@ class openssh::server {
 
     class config {
         file { 
-            "/etc/ssh":
+            '/etc/ssh':
                 ensure  => directory,
                 owner   => root,
                 group   => root,
                 mode    => 700,
-                require => Class["install"];
+                require => Class['install'];
 
-            "/etc/ssh/sshd_config":
+            '/etc/ssh/sshd_config':
                 ensure  => present,
                 owner   => root,
                 group   => root,
                 mode    => 600,
-                content => template ("openssh/sshd_config.erb");
+                content => template ('openssh/sshd_config.erb');
         }
 
         # Optional:
         
-        #logrotate::file { "auth":
-        #   source => "/etc/logrotate.d/auth",
-        #   log    => "/var/log/auth.log",
+        #logrotate::file { 'auth':
+        #   source => '/etc/logrotate.d/auth',
+        #   log    => '/var/log/auth.log',
         #}
     }
 
     class service {
-        service { "ssh":
+        service { 'ssh':
             enable     => true,
             ensure     => running,
             hasrestart => true,
@@ -77,7 +77,7 @@ class openssh::server {
 							'Debian' => 'ssh',
 							'Centos' => 'sshd',
 			},
-            require    => Class["config"],
+            require    => Class['config'],
         }
     }
 
@@ -85,5 +85,5 @@ class openssh::server {
     include openssh::server::config
     include openssh::server::service
     
-    Class["openssh::server::install"] -> Class["openssh::server::config"] -> Class["openssh::server::service"]
+    Class['openssh::server::install'] -> Class['openssh::server::config'] -> Class['openssh::server::service']
 }
